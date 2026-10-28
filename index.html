@@ -45,6 +45,10 @@ html,body{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-to
 #rb button{aspect-ratio:1;border-radius:50%;border:3px solid var(--ink);background:var(--panel);color:var(--ink);font:800 11px system-ui;letter-spacing:.05em;touch-action:none;padding:0}
 #rb button.on{background:var(--ink);color:var(--bg1);transform:scale(.92)}
 #rb [data-k=act]{border-color:#d49a00}
+ .col{display:flex;flex-direction:column;gap:14px;align-items:center}
+#menu #dif button{background:transparent;color:var(--ink);border-color:var(--c);min-width:240px}
+#menu #dif button:hover{background:var(--c);color:#fff}
+#dh{font-weight:800;letter-spacing:.14em}
 </style></head><body>
 <div id="hud"><div class="side"><b id="n1">P1</b><div class="bar"><i class="tr" id="t1"></i><i class="fl a" id="f1"></i></div><div class="pips" id="p1"><u></u><u></u><u></u></div></div>
 <div id="mid"><div id="tm">0 - 0</div><div id="rd">FIRST TO 3</div></div>
@@ -52,7 +56,11 @@ html,body{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-to
 <div id="fxl"></div><div id="flash"></div><div id="msg"></div>
 <div id="touch"><div id="lz"></div><div id="sb"><i id="sk"></i></div><div id="rb"><button data-k="act">GRAB</button><button data-k="kick">KICK</button><button data-k="punch">PUNCH</button><button data-k="dash">DASH</button><button data-k="block">BLOCK</button><button data-k="jump">JUMP</button></div></div>
 <div id="menu"><h1 id="mt">STICK DUEL</h1><div id="ms">First to 3 KOs wins. No timer.</div>
-<button data-m="1">1 PLAYER</button><button data-m="2">2 PLAYERS</button>
+<div id="mb" class="col"><button data-m="1">1 PLAYER</button><button data-m="2">2 PLAYERS</button></div>
+<div id="dif" class="col" style="display:none"><div id="dh">CHOOSE YOUR OPPONENT</div>
+<button data-d="0" style="--c:#3aa655">1 · NOOB</button><button data-d="1" style="--c:#2a62d6">2 · PRO</button>
+<button data-d="2" style="--c:#e08a00">3 · HACKER</button><button data-d="3" style="--c:#d8402f">4 · GOD</button>
+<button data-b="1" style="--c:#888">BACK</button></div>
 <small><b>P1</b> <kbd>A</kbd><kbd>D</kbd> move &nbsp;<kbd>Space</kbd>/<kbd>W</kbd> jump &nbsp;<kbd>S</kbd> crouch &nbsp;<kbd>Shift</kbd> dash &nbsp;<kbd>F</kbd> block &nbsp;<kbd>E</kbd>/click punch &nbsp;<kbd>Q</kbd> kick &nbsp;<kbd>R</kbd> grab/throw weapon &nbsp;<kbd>W</kbd>+<kbd>E</kbd> uppercut &nbsp;<kbd>S</kbd>+<kbd>Q</kbd> sweep kick<br>
 <b>P2</b> <kbd>←</kbd><kbd>→</kbd> move &nbsp;<kbd>↑</kbd> jump &nbsp;<kbd>↓</kbd> crouch &nbsp;<kbd>R-Shift</kbd> dash &nbsp;<kbd>L</kbd> block &nbsp;<kbd>O</kbd> punch &nbsp;<kbd>I</kbd> kick &nbsp;<kbd>P</kbd> grab/throw &nbsp;<kbd>↑</kbd>+<kbd>O</kbd> uppercut &nbsp;<kbd>↓</kbd>+<kbd>I</kbd> sweep kick<br>A pencil sword artist lurks in the paper background and every so often sketches a weapon (pencil sword, sword, katana, hammer or the Dark Lord sword, max 4 per round). Once the sketch is finished it fills in with colour and drops: pointed ones stick in the floor, so kick one to pop it loose, then grab it mid-air with grab/throw. Stunned or dizzy fighters keep their weapon, and whoever stands next to them can press grab/throw to rip it away and knock them back. A K.O. does not end the round: the loser flashes away and the pencil sketches them back in (most kills when time runs out wins the round). Armed punches chain down, side, poke, rising and overhead slashes; grab/throw again to hurl it point-first: hold up for an upward throw, up or down plus a direction for diagonals, or crouch to just drop it. Crouching dodges punches but not kicks. A close dodge (duck, jump or dash) opens a slow-motion bubble around you; block right as a hit lands for a PARRY. Jump over or dash through your opponent to switch sides; you face whichever way you move. Tap punch twice for a jab–cross combo. Up + punch is an uppercut that launches; down + kick is a low 360° sweep. Jump a sweep and hit the sweeper before they recover and they fly off knocked out; jump on a fighter lying down to stomp them. Get your block hit 3 times in a row and your guard breaks: you're dizzy and wide open for a couple of seconds. In 1 player mode, both key sets work.</small><small><b>PAD</b> stick/D-pad move &nbsp;A jump &nbsp;X punch &nbsp;Y kick &nbsp;B dash &nbsp;LB/LT block &nbsp;<b>RB/RT grab / catch / throw</b> &nbsp;(menu: A = 1P, X = 2P)<br><b>TOUCH</b> left thumb = stick, right thumb = buttons (landscape is best)<br><b>PARRY</b> a flying weapon (tap block right as it arrives) to freeze it mid-air, then hit <kbd>R</kbd> / RB / GRAB to catch it!</small></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -161,7 +169,8 @@ s.g.scale.setScalar(s.p*(.1+.28*(1-Math.pow(1-u,3))));s.g.rotation.z=s.r+u*.4;s.
 /* ---------- input ---------- */
 const KB={},tap={},M1=["KeyA","KeyD","Space","KeyS","KeyF","KeyE","KeyQ","ShiftLeft","KeyR"],M2=["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","KeyL","KeyO","KeyI","ShiftRight","KeyP"];
 addEventListener("keydown",e=>{if(e.code.startsWith("Arrow")||e.code=="Space")e.preventDefault();if(e.repeat)return;KB[e.code]=1;tap[e.code]=1;G.dev="kb";
-if(G.s=="menu"){if(e.code=="Digit1")start(1);if(e.code=="Digit2")start(2)}});
+if(G.s=="menu"){const pk=$("#dif").style.display=="flex",di=["Digit1","Digit2","Digit3","Digit4"].indexOf(e.code);
+if(pk){if(di>=0){G.diff=di;unpick();start(1)}else if(e.code=="Escape")unpick()}else{if(e.code=="Digit1")pick();if(e.code=="Digit2")start(2)}}
 addEventListener("keyup",e=>KB[e.code]=0);addEventListener("mousedown",e=>{if(e.button==0)tap.KeyE=1});addEventListener("blur",()=>{for(const k in KB)KB[k]=0});
 const human1=ms=>{const g=(m,i)=>KB[m[i]]?1:0,t=(m,i)=>tap[m[i]]?1:0,o=(f,i)=>ms.reduce((a,m)=>a|f(m,i),0);return{l:o(g,0),r:o(g,1),up:o(g,2)||(ms.includes(M1)&&KB.KeyW?1:0),crouch:o(g,3),block:o(g,4),punch:o(t,5),kick:o(t,6),dash:o(t,7),act:o(t,8)}};
 const TC={},TT={},PT=[{},{}],PM={};let TOUCH=matchMedia("(pointer:coarse)").matches;if(TOUCH)document.body.classList.add("touch");
@@ -170,7 +179,9 @@ function padFor(pi){const p=pads();if(G.mode==2&&TOUCH&&p.length==1)return pi?p[
 function pollPads(){for(let i=0;i<2;i++){const p=padFor(i),q=PT[i];if(!p){q.h=null;continue}const b=n=>p.buttons[n]&&p.buttons[n].pressed,ax=p.axes[0]||0,ay=p.axes[1]||0,
 h={l:ax<-.4||b(14),r:ax>.4||b(15),up:ay<-.6||b(12)||b(0),crouch:ay>.6||b(13),block:b(4)||b(6),punch:b(2),kick:b(3),dash:b(1),act:b(5)||b(7)},o=q.o||{};
 q.h=h;q.t={};for(const k of["punch","kick","dash","act"])q.t[k]=h[k]&&!o[k]?1:0;q.o=h;if(Object.values(h).some(Boolean))G.dev="pad"}}
-function menuPad(){if(G.s!="menu")return;const p=pads()[0];if(!p)return;const a=(p.buttons[0]&&p.buttons[0].pressed)||(p.buttons[9]&&p.buttons[9].pressed),x=p.buttons[2]&&p.buttons[2].pressed;if(a&&!PM.a)start(1);else if(x&&!PM.x)start(2);PM.a=a;PM.x=x}
+function menuPad(){if(G.s!="menu")return;const p=pads()[0];if(!p)return;const a=(p.buttons[0]&&p.buttons[0].pressed)||(p.buttons[9]&&p.buttons[9].pressed),x=p.buttons[2]&&p.buttons[2].pressed;const pk=$("#dif").style.display=="flex",y=p.buttons[3]&&p.buttons[3].pressed,bb=p.buttons[1]&&p.buttons[1].pressed;
+if(pk){const k=a&&!PM.a?0:x&&!PM.x?1:y&&!PM.y?2:bb&&!PM.b?3:-1;if(k>=0){G.diff=k;unpick();start(1)}}
+else if(a&&!PM.a)pick();else if(x&&!PM.x)start(2);PM.a=a;PM.x=x;PM.y=y;PM.b=bb}
 function extra(pi){const o={},q=PT[pi];if(q&&q.h){for(const k of["l","r","up","crouch","block"])o[k]=q.h[k]?1:0;for(const k of["punch","kick","dash","act"])o[k]=q.t[k]}
 if(!pi&&TOUCH){for(const k of["l","r","crouch","block"])o[k]=o[k]||TC[k]?1:0;o.up=o.up||TC.up||TC.jump?1:0;for(const k in TT)o[k]=1}return o}
 const human=(ms,pi)=>{const h=human1(ms),x=extra(pi);for(const k in x)h[k]=h[k]||x[k];return h};
@@ -182,7 +193,11 @@ const up=()=>{b.classList.remove("on");if(!tp)TC[k]=0};b.addEventListener("point
 lz.addEventListener("pointerdown",e=>{e.preventDefault();lz.setPointerCapture(e.pointerId);sp=e.pointerId;so=[e.clientX,e.clientY];sb.style.cssText="display:block;left:"+so[0]+"px;top:"+so[1]+"px";G.dev="touch"});
 lz.addEventListener("pointermove",e=>{if(e.pointerId!=sp)return;let dx=e.clientX-so[0],dy=e.clientY-so[1];const d=Math.hypot(dx,dy);if(d>55){dx*=55/d;dy*=55/d}sk.style.transform="translate("+dx+"px,"+dy+"px)";TC.l=dx<-14?1:0;TC.r=dx>14?1:0;TC.up=dy<-30?1:0;TC.crouch=dy>30?1:0});
 const end=e=>{if(e.pointerId!=sp)return;sp=null;sb.style.display="none";sk.style.transform="";TC.l=TC.r=TC.up=TC.crouch=0};lz.addEventListener("pointerup",end);lz.addEventListener("pointercancel",end)}
-function cpu(f,o,dt){const I={l:0,r:0,up:0,block:0,punch:0,kick:0,crouch:0,dash:0,act:0},a=f.ai||(f.ai={cd:.9,bk:0,seen:null,wait:0}),d=Math.abs(o.x-f.x),tw=o.x>f.x?1:-1;a.cd-=dt;a.wait-=dt;
+const DN=["NOOB","PRO","HACKER","GOD"],DIF=[
+{react:.55,bp:.2,parry:0,dodge:0,dist:1.25,rng:1.3,cd:[1,1.4],wt:.5,punish:0,combo:0,sweep:0,jmp:.002,dsh:.003,pick:.03,thr:.003,wpar:.05},
+{react:.25,bp:.5,parry:0,dodge:.1,dist:1.2,rng:1.45,cd:[.3,.7],wt:.3,punish:0,combo:.15,sweep:.05,jmp:.004,dsh:.01,pick:.1,thr:.01,wpar:.5},
+{react:.08,bp:.85,parry:.5,dodge:.35,dist:1.15,rng:1.45,cd:[.1,.3],wt:.1,punish:1,combo:.3,sweep:.12,jmp:.006,dsh:.02,pick:.2,thr:.03,wpar:.85},
+{react:0,bp:.92,parry:1,dodge:.6,dist:1.1,rng:1.45,cd:[0,.12],wt:0,punish:1,combo:.4,sweep:.2,jmp:.008,dsh:.03,pick:.4,thr:.05,wpar:1}]; function cpu(f,o,dt){const I={l:0,r:0,up:0,block:0,punch:0,kick:0,crouch:0,dash:0,act:0},a=f.ai||(f.ai={cd:.9,bk:0,seen:null,wait:0}),d=Math.abs(o.x-f.x),tw=o.x>f.x?1:-1;a.cd-=dt;a.wait-=dt;
 if(o.dead>0)return I;{const pw=WP.find(w=>w.st=="par"&&w.pf===f);if(pw){a.pc=(a.pc||0)+dt;if(a.pc>.3){a.pc=0;I.act=1}else I.block=1;return I}
 const iw=WP.find(w=>(w.st=="thrown"||w.st=="air")&&w.ow!==f&&Math.hypot(w.vx,w.vy)>10&&Math.sign(w.vx)==Math.sign(f.x-w.x)&&Math.abs(w.x-f.x)<Math.abs(w.vx)*.22&&Math.abs(w.x-f.x)>.4);
 if(iw){if(a.pw!==iw){a.pw=iw;a.pp=Math.random()<.5}if(a.pp){I.block=1;return I}}}if((o.state=="stun"||o.state=="dizzy")&&o.wp&&!f.wp&&d<1.3){I.act=1;return I}if(o.state=="stun"){if(d>.5)tw>0?I.r=1:I.l=1;else if(f.y<.01)I.up=1;return I}
@@ -401,7 +416,10 @@ function flow(dt){G.tm+=dt;
 if(G.s=="intro"&&G.tm>1.3){G.s="fight";msg("FIGHT!",700)}
 else if(G.s=="fight"){if(G.sk>0&&(G.sk-=dt)<=0)G.slow=0;}
 else if(G.s=="end"){if(G.tm>1.4)G.slow=0;if(G.tm>3){const w=G.win;G.s="menu";G.slow=0;msg("",1);$("#mt").textContent=(G.mode==1?(w?"CPU":"YOU"):"P"+(w+1))+" WIN"+(G.mode==1&&!w?"":"S")+"!";$("#ms").textContent="Play again?";$("#menu").classList.remove("hide")}}}
-document.querySelectorAll("#menu button").forEach(b=>b.onclick=()=>{b.blur();start(+b.dataset.m)});
+function pick(){$("#mb").style.display="none";$("#dif").style.display="flex"}
+function unpick(){$("#mb").style.display="flex";$("#dif").style.display="none"}
+document.querySelectorAll("#menu button").forEach(b=>b.onclick=()=>{b.blur();
+if(b.dataset.d!=null){G.diff=+b.dataset.d;unpick();start(1)}else if(b.dataset.b)unpick();else if(+b.dataset.m==1)pick();else start(2)});
 /* ---------- loop ---------- */
 let camX=0,camD=8,camY=1.2,last=performance.now(),ts=1;
 function resize(){ren.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}addEventListener("resize",resize);
