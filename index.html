@@ -60,9 +60,10 @@ html,body{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-to
 <div id="dif" class="col" style="display:none"><div id="dh">CHOOSE YOUR OPPONENT</div>
 <button data-d="0" style="--c:#3aa655">1 · NOOB</button><button data-d="1" style="--c:#2a62d6">2 · PRO</button>
 <button data-d="2" style="--c:#e08a00">3 · HACKER</button><button data-d="3" style="--c:#d8402f">4 · GOD</button>
-<button data-b="1" style="--c:#888">BACK</button></div>
+ <button data-d="4" style="--c:#b44cff">5 · SUPER HACKER</button>
+ <button data-b="1" style="--c:#888">BACK</button></div>
 <small><b>P1</b> <kbd>A</kbd><kbd>D</kbd> move &nbsp;<kbd>Space</kbd>/<kbd>W</kbd> jump &nbsp;<kbd>S</kbd> crouch &nbsp;<kbd>Shift</kbd> dash &nbsp;<kbd>F</kbd> block &nbsp;<kbd>E</kbd>/click punch &nbsp;<kbd>Q</kbd> kick &nbsp;<kbd>R</kbd> grab/throw weapon &nbsp;<kbd>W</kbd>+<kbd>E</kbd> uppercut &nbsp;<kbd>S</kbd>+<kbd>Q</kbd> sweep kick<br>
-<b>P2</b> <kbd>←</kbd><kbd>→</kbd> move &nbsp;<kbd>↑</kbd> jump &nbsp;<kbd>↓</kbd> crouch &nbsp;<kbd>R-Shift</kbd> dash &nbsp;<kbd>L</kbd> block &nbsp;<kbd>O</kbd> punch &nbsp;<kbd>I</kbd> kick &nbsp;<kbd>P</kbd> grab/throw &nbsp;<kbd>↑</kbd>+<kbd>O</kbd> uppercut &nbsp;<kbd>↓</kbd>+<kbd>I</kbd> sweep kick<br>A pencil sword artist lurks in the paper background and every so often sketches a weapon (pencil sword, sword, katana, hammer or the Dark Lord sword, max 4 per round). Once the sketch is finished it fills in with colour and drops: pointed ones stick in the floor, so kick one to pop it loose, then grab it mid-air with grab/throw. Stunned or dizzy fighters keep their weapon, and whoever stands next to them can press grab/throw to rip it away and knock them back. A K.O. does not end the round: the loser flashes away and the pencil sketches them back in (most kills when time runs out wins the round). Armed punches chain down, side, poke, rising and overhead slashes; grab/throw again to hurl it point-first: hold up for an upward throw, up or down plus a direction for diagonals, or crouch to just drop it. Crouching dodges punches but not kicks. A close dodge (duck, jump or dash) opens a slow-motion bubble around you; block right as a hit lands for a PARRY. Jump over or dash through your opponent to switch sides; you face whichever way you move. Tap punch twice for a jab–cross combo. Up + punch is an uppercut that launches; down + kick is a low 360° sweep. Jump a sweep and hit the sweeper before they recover and they fly off knocked out; jump on a fighter lying down to stomp them. Get your block hit 3 times in a row and your guard breaks: you're dizzy and wide open for a couple of seconds. In 1 player mode, both key sets work.</small><small><b>PAD</b> stick/D-pad move &nbsp;A jump &nbsp;X punch &nbsp;Y kick &nbsp;B dash &nbsp;LB/LT block &nbsp;<b>RB/RT grab / catch / throw</b> &nbsp;(menu: A = 1P, X = 2P)<br><b>TOUCH</b> left thumb = stick, right thumb = buttons (landscape is best)<br><b>PARRY</b> a flying weapon (tap block right as it arrives) to freeze it mid-air, then hit <kbd>R</kbd> / RB / GRAB to catch it!</small></div>
+<b>P2</b> <kbd>←</kbd><kbd>→</kbd> move &nbsp;<kbd>↑</kbd> jump &nbsp;<kbd>↓</kbd> crouch &nbsp;<kbd>R-Shift</kbd> dash &nbsp;<kbd>L</kbd> block &nbsp;<kbd>O</kbd> punch &nbsp;<kbd>I</kbd> kick &nbsp;<kbd>P</kbd> grab/throw &nbsp;<kbd>↑</kbd>+<kbd>O</kbd> uppercut &nbsp;<kbd>↓</kbd>+<kbd>I</kbd> sweep kick<br>A pencil sword artist lurks in the paper background and every so often sketches a weapon (pencil sword, sword, katana, hammer or the Dark Lord sword, max 4 per round). Once the sketch is finished it fills in with colour and drops: pointed ones stick in the floor, so kick one to pop it loose, then grab it mid-air with grab/throw. Stunned or dizzy fighters keep their weapon, and whoever stands next to them can press grab/throw to rip it away and knock them back. A K.O. does not end the round: the loser flashes away and the pencil sketches them back in (most kills when time runs out wins the round). Armed punches chain down, side, poke, rising and overhead slashes; grab/throw again to hurl it point-first: hold up for an upward throw, up or down plus a direction for diagonals, or crouch to just drop it. Crouching dodges punches but not kicks. A close dodge (duck, jump or dash) opens a slow-motion bubble around you; block right as a hit lands for a PARRY. Jump over or dash through your opponent to switch sides; you face whichever way you move. Tap punch twice for a jab–cross combo. Up + punch is an uppercut that launches; down + kick is a low 360° sweep. Jump a sweep and hit the sweeper before they recover and they fly off knocked out; jump on a fighter lying down to stomp them. Block or parry 3 attacks within 2.5 seconds and your guard breaks: you're dizzy and wide open for a couple of seconds. In 1 player mode, both key sets work.</small><small><b>PAD</b> stick/D-pad move &nbsp;A jump &nbsp;X punch &nbsp;Y kick &nbsp;B dash &nbsp;LB/LT block &nbsp;<b>RB/RT grab / catch / throw</b> &nbsp;(menu: A = 1P, X = 2P)<br><b>TOUCH</b> left thumb = stick, right thumb = buttons (landscape is best)<br><b>PARRY</b> a flying weapon (tap block right as it arrives) to freeze it mid-air, then hit <kbd>R</kbd> / RB / GRAB to catch it!</small></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 "use strict";
@@ -169,7 +170,7 @@ s.g.scale.setScalar(s.p*(.1+.28*(1-Math.pow(1-u,3))));s.g.rotation.z=s.r+u*.4;s.
 /* ---------- input ---------- */
 const KB={},tap={},M1=["KeyA","KeyD","Space","KeyS","KeyF","KeyE","KeyQ","ShiftLeft","KeyR"],M2=["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","KeyL","KeyO","KeyI","ShiftRight","KeyP"];
 addEventListener("keydown",e=>{if(e.code.startsWith("Arrow")||e.code=="Space")e.preventDefault();if(e.repeat)return;KB[e.code]=1;tap[e.code]=1;G.dev="kb";
-if(G.s=="menu"){const pk=$("#dif").style.display=="flex",di=["Digit1","Digit2","Digit3","Digit4"].indexOf(e.code);
+if(G.s=="menu"){const pk=$("#dif").style.display=="flex",di=["Digit1","Digit2","Digit3","Digit4","Digit5"].indexOf(e.code);
 if(pk){if(di>=0){G.diff=di;unpick();start(1)}else if(e.code=="Escape")unpick()}else{if(e.code=="Digit1")pick();if(e.code=="Digit2")start(2)}}});
 addEventListener("keyup",e=>KB[e.code]=0);addEventListener("mousedown",e=>{if(e.button==0)tap.KeyE=1});addEventListener("blur",()=>{for(const k in KB)KB[k]=0});
 const human1=ms=>{const g=(m,i)=>KB[m[i]]?1:0,t=(m,i)=>tap[m[i]]?1:0,o=(f,i)=>ms.reduce((a,m)=>a|f(m,i),0);return{l:o(g,0),r:o(g,1),up:o(g,2)||(ms.includes(M1)&&KB.KeyW?1:0),crouch:o(g,3),block:o(g,4),punch:o(t,5),kick:o(t,6),dash:o(t,7),act:o(t,8)}};
@@ -193,12 +194,12 @@ const up=()=>{b.classList.remove("on");if(!tp)TC[k]=0};b.addEventListener("point
 lz.addEventListener("pointerdown",e=>{e.preventDefault();lz.setPointerCapture(e.pointerId);sp=e.pointerId;so=[e.clientX,e.clientY];sb.style.cssText="display:block;left:"+so[0]+"px;top:"+so[1]+"px";G.dev="touch"});
 lz.addEventListener("pointermove",e=>{if(e.pointerId!=sp)return;let dx=e.clientX-so[0],dy=e.clientY-so[1];const d=Math.hypot(dx,dy);if(d>55){dx*=55/d;dy*=55/d}sk.style.transform="translate("+dx+"px,"+dy+"px)";TC.l=dx<-14?1:0;TC.r=dx>14?1:0;TC.up=dy<-30?1:0;TC.crouch=dy>30?1:0});
 const end=e=>{if(e.pointerId!=sp)return;sp=null;sb.style.display="none";sk.style.transform="";TC.l=TC.r=TC.up=TC.crouch=0};lz.addEventListener("pointerup",end);lz.addEventListener("pointercancel",end)}
-const DN=["NOOB","PRO","HACKER","GOD"],DIF=[
+const DN=["NOOB","PRO","HACKER","GOD","SUPER HACKER"],DIF=[
 {react:.55,bp:.2,parry:0,dodge:0,dist:1.25,rng:1.3,cd:[1,1.4],wt:.5,punish:0,combo:0,sweep:0,jmp:.002,dsh:.003,pick:.03,thr:.003,wpar:.05},
 {react:.25,bp:.5,parry:0,dodge:.1,dist:1.2,rng:1.45,cd:[.3,.7],wt:.3,punish:0,combo:.15,sweep:.05,jmp:.004,dsh:.01,pick:.1,thr:.01,wpar:.5},
 {react:.08,bp:.85,parry:.5,dodge:.35,dist:1.15,rng:1.45,cd:[.1,.3],wt:.1,punish:1,combo:.3,sweep:.12,jmp:.006,dsh:.02,pick:.2,thr:.03,wpar:.85},
-{react:0,bp:.92,parry:1,dodge:.6,dist:1.1,rng:1.45,cd:[0,.12],wt:0,punish:1,combo:.4,sweep:.2,jmp:.008,dsh:.03,pick:.4,thr:.05,wpar:1}];
-function cpu(f,o,dt){const I={l:0,r:0,up:0,block:0,punch:0,kick:0,crouch:0,dash:0,act:0},a=f.ai||(f.ai={cd:.9,bk:0,seen:null,wait:0}),d=Math.abs(o.x-f.x),tw=o.x>f.x?1:-1,Q=DIF[G.diff|0];a.cd-=dt;a.wait-=dt;a.rd=(a.rd||0)-dt;
+{react:0,bp:.92,parry:1,dodge:.6,dist:1.1,rng:1.45,cd:[0,.12],wt:0,punish:1,combo:.4,sweep:.2,jmp:.008,dsh:.03,pick:.4,thr:.05,wpar:1},{hk:1,react:0,bp:1,parry:1,dodge:0,dist:1,rng:1.5,cd:[0,.1],wt:0,punish:1,combo:0,sweep:0,jmp:0,dsh:0,pick:0,thr:0,wpar:1}];
+function cpu(f,o,dt){const I={l:0,r:0,up:0,block:0,punch:0,kick:0,crouch:0,dash:0,act:0},a=f.ai||(f.ai={cd:.9,bk:0,seen:null,wait:0}),d=Math.abs(o.x-f.x),tw=o.x>f.x?1:-1,Q=DIF[G.diff|0];if(Q.hk)return hk(f,o,dt);a.cd-=dt;a.wait-=dt;a.rd=(a.rd||0)-dt;
 if(o.dead>0)return I;{const pw=WP.find(w=>w.st=="par"&&w.pf===f);if(pw){a.pc=(a.pc||0)+dt;if(a.pc>.3){a.pc=0;I.act=1}else I.block=1;return I}
 const iw=WP.find(w=>(w.st=="thrown"||w.st=="air")&&w.ow!==f&&Math.hypot(w.vx,w.vy)>10&&Math.sign(w.vx)==Math.sign(f.x-w.x)&&Math.abs(w.x-f.x)<Math.abs(w.vx)*.22&&Math.abs(w.x-f.x)>.4);
 if(iw){if(a.pw!==iw){a.pw=iw;a.pp=Math.random()<Q.wpar}if(a.pp){I.block=1;return I}}}if((o.state=="stun"||o.state=="dizzy")&&o.wp&&!f.wp&&d<1.3){I.act=1;return I}if(o.state=="stun"){if(d>.5)tw>0?I.r=1:I.l=1;else if(f.y<.01)I.up=1;return I}
@@ -213,6 +214,53 @@ if(Q.combo&&r<Q.combo&&d<1.2){I.punch=1;I.up=Math.random()<.5?1:0}else if(Q.swee
 else if(d>1||Math.random()<.4){I.kick=1;if(Math.random()<.15)I.crouch=1}else{I.punch=1;if(Math.random()<.2)I.up=1}
 a.cd=Q.cd[0]+Math.random()*Q.cd[1];if(Math.random()<Q.wt)a.wait=.5}
 if(!I.block&&d<2&&Math.random()<Q.jmp)I.up=1;if(!I.block&&d>2&&Math.random()<Q.dsh)I.dash=1;if(!f.wp&&WP.some(x=>(x.st=="air"||x.st=="floor")&&Math.abs(x.x-f.x)<1.1)&&Math.random()<Q.pick)I.act=1;if(f.wp&&d>3&&Math.random()<Q.thr)I.act=1;return I}
+function hk(f,o,dt){
+const I={l:0,r:0,up:0,block:0,punch:0,kick:0,crouch:0,dash:0,act:0},a=f.ai||(f.ai={cd:0,seen:null,wait:0}),d=Math.abs(o.x-f.x),tw=o.x>f.x?1:-1,mv=s=>{if(s>0)I.r=1;else I.l=1};
+a.cd=(a.cd||0)-dt;a.po=a.po||0;a.recover=Math.max(0,(a.recover||0)-dt);a.threat=Math.max(0,(a.threat||0)-dt);
+if(o.dead>0||f.state==="ko")return I;
+const free=f.state==="idle"&&!f.atk&&f.y<.05&&f.dash<=0;
+/* Throwables: guard only if their velocity predicts an actual crossing. */
+const iw=WP.find(w=>{if(!["thrown","air"].includes(w.st)||w.ow===f)return false;const dx=f.x-w.x,dy=(f.y+1)-w.y;if(Math.abs(w.vx)<.01||dx*w.vx<=0)return false;const t=dx/w.vx;if(t<0||t>.22)return false;return Math.abs(dy-w.vy*t)<1.05});
+if(iw){if(free&&f.face===-o.face)I.block=1;else if(free){I.crouch=1;if(d<1.1)mv(-tw)}return I}
+if((o.state==="stun"||o.state==="dizzy")&&o.wp&&!f.wp&&d<1.45&&Math.abs(o.y-f.y)<1.3){I.act=1;return I}
+if(o.state==="stun"){if(d>.55)mv(tw);else if(f.y<.01)I.up=1;return I}
+const myR=f.wp?1.9*f.wp.rc:1.3,oa=o.atk&&ATK[o.atk.n];
+const go=()=>{const k=a.po++%6;if(o.y>.35){I.punch=1;I.up=1}else if(o.block&&!o.lg){I.kick=1;I.crouch=1}else if(o.crouch){I.kick=1}else if(f.wp){I.punch=1;if(k===4)I.up=1}else if(d>1.05||k===1||k===4){I.kick=1}else I.punch=1;a.cd=.075+Math.random()*.075};
+/* Remember opponent habits to read repeated choices and avoid predictable defense. */
+if(o.atk&&o.atk!==a.seen){a.seen=o.atk;a.lastAttack=o.atk.n;a.lastAttackAt=T;a.threat=.5}
+if(!o.atk&&a.seen){a.seen=null;a.recover=.12}
+/* Read startup and active frames from the actual move definitions. Never parry blindly. */
+if(oa&&o.atk&&o.atk.t<99&&oa.w&&oa.w[0]<2){
+ const wr=o.wp&&/^s\d/.test(o.atk.n)?o.wp.rc:1,reach=oa.reach*wr,
+       along=(f.x-o.x)*o.face,front=along>=-.12&&along<=reach+.35,
+       aligned=Math.abs(o.y-f.y)<.82,distOK=oa.sweep?d<=reach+.35:front,
+       until=oa.w[0]-o.atk.t,active=o.atk.t>=oa.w[0]-.025&&o.atk.t<=oa.w[1]+.025,
+       facing=f.face===-o.face,canGuard=free&&facing&&distOK&&aligned;
+ if(canGuard){
+   /* Start the block late enough for the game's fresh-press parry test, early
+      enough to account for one frame of update order. Keep it active if hit frames linger. */
+   if(until<=.105&&until>=-.055){I.block=1;if(oa.sweep)I.crouch=1;return I}
+   if(active){I.block=1;if(oa.sweep)I.crouch=1;return I}
+   /* If a heavy sweep is about to land, jumping is safer than gambling a parry. */
+   if(oa.sweep&&until<.19&&until>0){I.up=1;return I}
+ }
+ /* An attack is committed: don't walk into it. If out of range, punish the whiff. */
+ if(oa&&o.atk&&o.atk.t<oa.w[1]&&distOK&&aligned){
+   if(!facing&&free){if(d<.8)mv(-tw);else mv(tw);return I}
+   if(until>.18&&d<reach+.2&&free){mv(-tw);return I}
+ }
+}
+const canAct=f.state==="idle"&&!f.atk&&f.y<.05&&f.dash<=0;
+/* Hard punish: exploit confirmed recovery, dizzy, hurt, and whiffed attacks. */
+if(canAct&&(o.state==="dizzy"||o.state==="hurt"||(!o.atk&&a.recover>0))){if(d<myR+.25)go();else{mv(tw);if(d>1.9&&f.dc<=0)I.dash=1}return I}
+if(!canAct)return I;
+/* Pick up or steal weapons only when it won't walk through an active attack. */
+if(!f.wp){const w=WP.find(w=>(w.st==="floor"||w.st==="air"||(w.st==="stuck"&&(w.x-f.x)*f.face>0))&&Math.abs(w.x-f.x)<5.5&&(!w.rsv||w.rsv===f));if(w&&(!oa||!o.atk||o.atk.t>oa.w[1])){const dx=w.x-f.x;if(Math.abs(dx)>.72)mv(dx);else if(w.st==="stuck")I.kick=1;else I.act=1;return I}}
+/* Don't sit at unsafe range: maintain the edge of weapon reach and bait whiffs. */
+if(d<myR+.18){if(a.cd<=0)go();if(d<.58)mv(-tw)}else{mv(tw);if(d>2.25&&f.dc<=0)I.dash=1}
+/* Attack only when the opponent cannot immediately punish; alternate timing and height. */
+if(a.cd<=0&&d<myR+.2){if(o.block&&!o.lg){I.kick=1;I.crouch=1;a.cd=.16}else go();return I}
+return I}
 /* ---------- simulation ---------- */
 const G={s:"menu",r:0,tm:0,time:60,mode:1,slow:0,wc:0,wt:5,lk:""};let hitstop=0,shake=0,T=0;
 const WORD={jab:"POW!",cross:"WHAM!",kick:"THWACK!",s0:"SLASH!",s1:"SWISH!",s2:"STAB!",s3:"UPPERCUT!",s4:"CLEAVE!",upper:"UPPERCUT!",sweep:"SWEEP!"},pops=[],fxl=$("#fxl"),V3=new THREE.Vector3();
@@ -227,7 +275,14 @@ if(a.atk.h||t<A.w[0]||t>A.w[1]||(A.sweep?Math.abs(d)>A.reach||a.atk.dd:d<-.15||d
 if((b.crouch&&!A.low)||Math.abs(b.y-a.y)>.9||b.dash>0){if(!a.atk.dd){a.atk.dd=1;dodge(b);if(A.sweep&&Math.abs(b.y-a.y)>.9){a.exp=.85;pop("WHIFF!",a.x,a.y+2.3,"c-block")}}return}
 a.atk.h=1;const px=b.x-a.face*.12,py=b.y+(a.atk.n=="kick"?1.05:1.4),blk=b.block&&b.face==-a.face&&(!A.sweep||b.lg),par=blk&&T-b.bs<.16;
 const dmg=par?0:blk?A.dmg*.12:A.dmg,ctr=!blk&&b.atk;b.hp=Math.max(0,b.hp-dmg);b.vx=a.face*(A.sweep&&d<0?-1:1)*A.kb*(blk?.35:1);
-if(par){a.atk.t=99;a.vx=-a.face*3;a.hs=b.hs=.12;pop("PARRY!",px,py,"c-parry")}
+if(par){
+ a.atk.t=99;a.vx=-a.face*3;a.hs=b.hs=.12;
+ /* A successful parry still spends guard. This prevents F-tapping from
+    resetting the perfect-parry window forever without ever breaking guard. */
+ b.gh=T-b.gt<2.5?b.gh+1:1;b.gt=T;
+ if(b.gh>=3){b.gh=0;b.state="dizzy";b.ht=2.4;b.atk=null;b.buf=null;b.dash=0;b.block=0;b.vx=a.face*5;b.flash=1;pop("GUARD BREAK!",b.x,b.y+2.3,"c-ctr");fx(px,py,0xffc93a);shake=.07}
+ else pop("PARRY! "+b.gh+"/3",px,py,"c-parry")
+}
 else if(blk){b.gh=T-b.gt<2.5?b.gh+1:1;b.gt=T;
 if(b.gh>=3){b.gh=0;b.state="dizzy";b.ht=2.4;b.atk=null;b.buf=null;b.dash=0;b.block=0;b.vx=a.face*5;b.flash=1;pop("GUARD BREAK!",b.x,b.y+2.3,"c-ctr");fx(px,py,0xffc93a);shake=.07}
 else pop("BLOCK! "+b.gh+"/3",px,py,"c-block")}
